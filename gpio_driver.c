@@ -58,10 +58,10 @@ static ssize_t driver_write(struct file *File, const char *user_buffer, size_t c
 	/* Setting the LED */
 	switch(value) {
 		case '0':
-			gpio_set_value(4, 0);
+			gpio_set_value(5, 0);
 			break;
 		case '1':
-			gpio_set_value(4, 1);
+			gpio_set_value(5, 1);
 			break;
 		default:
 			printk("Invalid Input!\n");
@@ -132,22 +132,22 @@ static int __init ModuleInit(void) {
 		goto AddError;
 	}
 
-	/* GPIO 4 init */
-	if(gpio_request(4, "rpi-gpio-4")) {
-		printk("Can not allocate GPIO 4\n");
+	/* GPIO 5 init */
+	if(gpio_request(5, "rpi-gpio-5")) {
+		printk("Can not allocate GPIO 5\n");
 		goto AddError;
 	}
 
-	/* Set GPIO 4 direction */
-	if(gpio_direction_output(4, 0)) {
-		printk("Can not set GPIO 4 to output!\n");
-		goto Gpio4Error;
+	/* Set GPIO 5 direction */
+	if(gpio_direction_output(5, 0)) {
+		printk("Can not set GPIO 5 to output!\n");
+		goto Gpio5Error;
 	}
 
 	/* GPIO 17 init */
 	if(gpio_request(17, "rpi-gpio-17")) {
 		printk("Can not allocate GPIO 17\n");
-		goto Gpio4Error;
+		goto Gpio17Error;
 	}
 
 	/* Set GPIO 17 direction */
@@ -160,8 +160,8 @@ static int __init ModuleInit(void) {
 	return 0;
 Gpio17Error:
 	gpio_free(17);
-Gpio4Error:
-	gpio_free(4);
+Gpio5Error:
+	gpio_free(5);
 AddError:
 	device_destroy(my_class, my_device_nr);
 FileError:
@@ -175,9 +175,9 @@ ClassError:
  * @brief This function is called, when the module is removed from the kernel
  */
 static void __exit ModuleExit(void) {
-	gpio_set_value(4, 0);
+	gpio_set_value(5, 0);
 	gpio_free(17);
-	gpio_free(4);
+	gpio_free(5);
 	cdev_del(&my_device);
 	device_destroy(my_class, my_device_nr);
 	class_destroy(my_class);
