@@ -1,4 +1,5 @@
-obj-m += gpio_driver.o
+obj-m += gpio_driver.o lcd_driver.o
+
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
